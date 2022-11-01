@@ -1,0 +1,42 @@
+name: testando build da aplicação DIVAM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    name: checkout and install dependencies
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: npm
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v7
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }} 
+
+      - name: Installing EAS-CLI
+        run: npm install -g eas-cli
+
+      - name: Installing YARN dependencies
+        run: yarn install
+     
+      - name: Installing development client
+        run: expo install expo-dev-client
+
+      - name: Build on EAS
+        run: eas build --platform all --profile development
+        env:
+          EXPO_APPLE_ID: ${{ secrets.EXPO_APPLE_ID }}
+          EXPO_APPLE_ID_PASSWORD: ${{ secrets.EXPO_APPLE_PASSWORD }}
