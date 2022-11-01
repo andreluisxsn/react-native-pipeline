@@ -1,4 +1,4 @@
-name: testando build da aplicação DIVAM
+name: testando build da aplicação React Native
 
 on:
   push:
